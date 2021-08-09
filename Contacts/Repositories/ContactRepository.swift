@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
@@ -22,13 +23,16 @@ class ContactsRepository: ObservableObject {
     //MARK: Get Data
     
     func loadData() {
+        let userId = Auth.auth().currentUser?.uid
+        
         db.collection("contacts")
-            .order(by: "firstName")
+            .whereField("userId", isEqualTo: userId)
             .addSnapshotListener() { (querySnapshot, err) in
             if let querySnapshot = querySnapshot {
                 self.contacts = querySnapshot.documents.compactMap { document in
                     do {
                         let x = try document.data(as: Contact.self)
+                        print(self.contacts.count)
                         return x
                     }
                     catch {
@@ -49,6 +53,22 @@ class ContactsRepository: ObservableObject {
         catch {
             fatalError("Unable to encode contact: \(error.localizedDescription)")
         }
+    }
+    
+    // MARK: Update data
+    
+    func updateContact(_ contact: Contact) {
+        let docRef = db.collection("contacts").document(contact.id!)
+        
+        docRef.delete()
+        addContact(contact)
+    }
+    
+    // MARK: Delete data
+    
+    func deleteContact(_ contact: Contact) {
+        let docRef = db.collection("contacts").document(contact.id!)
+        docRef.delete()
     }
     
 }

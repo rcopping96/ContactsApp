@@ -8,5 +8,5 @@ target 'Contacts' do
 pod 'Firebase/Firestore'
 pod 'Firebase/Auth'
 pod 'FirebaseFirestoreSwift'
-
+pod 'resolver'
 end

@@ -1,85 +1,32 @@
 //
-//  ContactsViewModel.swift
+//  ContactsListViewModel.swift
 //  Contacts
 //
-//  Created by Rob Copping on 04/08/2021.
+//  Created by Rob Copping on 09/08/2021.
 //
 
-import SwiftUI
+import Foundation
+import Combine
 
-struct ContactsListViewModel: View {
-    @State private var searchText: String = ""
-    @State private var showNewContactSheet: Bool = false
+class ContactsListViewModel: ObservableObject {
+    @Published var contactsRepo = ContactsRepository()
+    @Published var contactsCellViewModels = [ContactCellViewModel]()
     
-    var body: some View {
-        NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
-                SearchBar(text: $searchText)
-                    .padding(.bottom)
-                
-                
-                ContactCellViewModel()
-            }
-            .navigationBarTitle("Contacts")
-            .navigationBarItems(trailing:
-                                    Button(action: {
-                                        // Add Contact
-                                        self.showNewContactSheet.toggle()
-                                    }, label: {
-                                        Image(systemName: "plus.circle.fill")
-                                            .font(.largeTitle)
-                                    })
-                                    .sheet(isPresented: $showNewContactSheet){
-                                        ContactEditDetailViewModel(contact: Contact())
-                                    })
-        }
-    }
-}
-
-struct ContactsListViewModel_Previews: PreviewProvider {
-    static var previews: some View {
-        ContactsListViewModel()
-        
-    }
-}
-
-
-struct SearchBar: View {
-    @Binding var text: String
-    @State private var isEditing = false
+    private var cancellables = Set<AnyCancellable>()
     
-    var body: some View {
-        HStack{
-            TextField("Search ...", text: $text)
-                .padding(7)
-                .padding(.horizontal, 20)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-                .onTapGesture {
-                    self.isEditing = true
+    init() {
+        contactsRepo.$contacts
+            .map { contact in
+                contact.map { contact in
+                    ContactCellViewModel(contact: contact)
                 }
-                .overlay(
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 20)
-                    }
-                )
-            
-            if isEditing {
-                Button(action: {
-                    self.isEditing = false
-                    self.text = ""
-                }, label: {
-                    Text("Cancel")
-                })
-                .padding(.trailing)
-                .transition(.move(edge: .trailing))
-                .animation(.default)
             }
-            
-        }
+            .assign(to: \.contactsCellViewModels, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func addContact(contact: Contact) {
+        let contactVM = ContactCellViewModel(contact: contact)
+        self.contactsCellViewModels.append(contactVM)
     }
 }

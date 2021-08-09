@@ -9,8 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-            ContactsListViewModel()
-    }
+        TabView {
+            DialPadViewModel()
+                .tabItem {
+                    Label("Dial Pad", systemImage: "phone.fill.arrow.up.right")
+                }
+            
+            ContactsListView()
+                .tabItem {
+                    Label("Contacts", systemImage: "person.crop.circle")
+                }
+        }    }
 }
 
 struct ContentView_Previews: PreviewProvider {

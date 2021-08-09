@@ -1,13 +1,16 @@
 //
-//  ContactCellViewModel.swift
+//  ContactCellView.swift
 //  Contacts
 //
-//  Created by Rob Copping on 04/08/2021.
+//  Created by Rob Copping on 09/08/2021.
 //
 
 import SwiftUI
 
-struct ContactCellViewModel: View {
+struct ContactCellView: View {
+    var contact: Contact
+    
+    var callManager = CallManager()
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15, style: .circular)
@@ -21,7 +24,7 @@ struct ContactCellViewModel: View {
                     .background(Color.gray.opacity(0.5))
                     .clipShape(Circle())
                 
-                Text("Rob Copping")
+                Text("\(contact.contactFirstName) \(contact.contactLastName)")
                     .font(.title3)
                     .fontWeight(.semibold)
                 
@@ -29,6 +32,7 @@ struct ContactCellViewModel: View {
                 
                 Button(action: {
                     //Add Call Functionality
+                    callManager.startCall(handle: contact.phoneNumber!)
                 }, label: {
                     Image(systemName: "phone.fill")
                         .font(.title)
@@ -43,8 +47,9 @@ struct ContactCellViewModel: View {
     }
 }
 
-struct ContactCellViewModel_Previews: PreviewProvider {
+
+struct ContactCellView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactCellViewModel()
+        ContactCellView(contact: exampleContacts[0])
     }
 }

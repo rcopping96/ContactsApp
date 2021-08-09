@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
@@ -24,6 +23,7 @@ struct Contact: Codable, Identifiable {
     var phoneNumber: String?
     var email: String?
     var favorite: Bool?
+    var userId: String?
 }
 
 var exampleContacts: [Contact] = [
