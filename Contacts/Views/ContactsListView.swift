@@ -21,7 +21,10 @@ struct ContactsListView: View {
                     .padding(.bottom)
                 
                     ForEach(contactsRepo.contacts) { contact in
-                        ContactCellView(contact: contact)
+                        NavigationLink(
+                            destination: ContactDetailViewModel(contact: contact)){
+                                ContactCellView(contact: contact)
+                            }
                     }
                 
             }

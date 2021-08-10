@@ -14,7 +14,7 @@ struct Contact: Codable, Identifiable {
     var firstName: String?
     var lastName: String?
     var company: String?
-    var dateOfBirth: String?
+    var dateOfBirth: Date?
     var addressLine1: String?
     var addressLine2: String?
     var city: String?
@@ -26,6 +26,14 @@ struct Contact: Codable, Identifiable {
     var userId: String?
 }
 
+class ContactVM: ObservableObject {
+    @Published var contact: Contact
+    
+    init(_ contact: Contact) {
+        self.contact = contact
+    }
+}
+
 var exampleContacts: [Contact] = [
-    Contact(id: "test1", firstName: "Rob", lastName: "Copping", company: "KCL", dateOfBirth: "1996-09-03", addressLine1: "3 Cutice Close", addressLine2: "", city: "St Austell", postcode: "PL25 3FJ", phoneNumber: "07476270702", email: "robbiecop96@gmail.com", favorite: false)
+    Contact(id: "test1", firstName: "Rob", lastName: "Copping", company: "KCL", addressLine1: "3 Cutice Close", addressLine2: "", city: "St Austell", postcode: "PL25 3FJ", phoneNumber: "07476270702", email: "robbiecop96@gmail.com", favorite: false)
 ]

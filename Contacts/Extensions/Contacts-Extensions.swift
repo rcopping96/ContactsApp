@@ -53,7 +53,7 @@ extension Contact {
         email ?? ""
     }
     
-    var contactDOB: String {
-        dateOfBirth ?? ""
+    var contactDOB: Date? {
+        dateOfBirth
     }
 }
